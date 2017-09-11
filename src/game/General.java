@@ -1,3 +1,5 @@
+package game;
+
 import javafx.scene.image.Image;
 
 public class General extends Piece {

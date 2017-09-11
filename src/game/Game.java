@@ -1,3 +1,5 @@
+package game;
+
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -5,8 +7,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class Game extends Application {
-    public static int H = 960;
-    public static int W = 640;
+    public static int H = 743;
+    public static int W = 790;
     private Group root = new Group();
 
     @Override

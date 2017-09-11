@@ -1,3 +1,6 @@
+package game;
+
+import game.Piece;
 import javafx.scene.image.Image;
 
 public class Soldier extends Piece {
