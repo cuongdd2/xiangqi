@@ -2,6 +2,11 @@ public class Player {
     public int remainderTime;  //second
     PlayProfile playProfile;
 
+    public Player(int remainderTime, PlayProfile playProfile) {
+        this.remainderTime = remainderTime;
+        this.playProfile = playProfile;
+    }
+
     public int getRemainderTime() {
         return remainderTime;
     }
