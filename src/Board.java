@@ -101,7 +101,7 @@ public class Board extends Group {
         this.getChildren().add(g);
 
         for (int i = 0; i < 5; i++) {
-            Piece s = new Solider(true);
+            Piece s = new Soldier(true);
             s.setX(15 + i * 143);
             s.setY(THIRD_ROW);
             this.getChildren().add(s);

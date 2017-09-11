@@ -6,4 +6,16 @@ public class Canon extends Piece {
         String url = (black ? "black" : "red") + "/c.png";
         this.setImage(new Image(url));
     }
+
+    @Override
+    public void move(int x, int y) {
+        super.move(x, y);
+
+
+
+
+
+    }
+
+
 }
