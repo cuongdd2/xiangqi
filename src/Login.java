@@ -68,6 +68,8 @@ public class Login extends Application {
             public void handle(ActionEvent e) {
                 System.out.println(userTextField.getText());
                 String userName = userTextField.getText();
+
+                //test
                 try {
                     if (this.login(userName).equals(null)){
                         //login success
@@ -88,9 +90,11 @@ public class Login extends Application {
 
             private String login(String userName) throws SQLException {
 
+                Connection conn = null;
+                String url = "jdbc:sqlite:C:/sqlite/main.db";
+                // create a connection to the database
+                conn = DriverManager.getConnection(url);
 
-                String url = "jdbc:sql";
-                Connection conn = DriverManager.getConnection(url,"","");
                 Statement stmt = conn.createStatement();
                 ResultSet rs;
 
