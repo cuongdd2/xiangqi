@@ -22,6 +22,9 @@ public class Login {
             Player player = new Player(Util.GAME_TIME,playProfile);
         }else {
             String createUser = "insert into user(name) values('default')";
+            int id= stmt.executeUpdate(createUser, Statement.RETURN_GENERATED_KEYS);
+            PlayProfile playProfile = new PlayProfile(id, "me,", 0, 100);
+            Player player = new Player(Util.GAME_TIME,playProfile);
         }
     }
 }
