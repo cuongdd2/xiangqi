@@ -25,9 +25,6 @@ public class Board extends Group {
     public Board() {
         this.getChildren().add(new ImageView(new Image("bg640.jpg")));
         this.draw();
-        this.getChildren().add(selecting);
-        selecting.setFitWidth(60);
-        selecting.setFitHeight(60);
         initCircle();
         selecting.setVisible(false);
         this.setLayoutX(150);
@@ -75,16 +72,19 @@ public class Board extends Group {
     }
 
     private void initCircle() {
+        this.getChildren().add(selecting);
+        selecting.setFitWidth(44);
+        selecting.setFitHeight(44);
         rt = new RotateTransition(Duration.seconds(1), selecting);
-        rt.setByAngle(360);
+        rt.setByAngle(-360);
         rt.setCycleCount(Timeline.INDEFINITE);
         rt.setInterpolator(Interpolator.LINEAR);
         rt.play();
     }
 
     private void showSelected(P p) {
-        selecting.setX(Val.InitX + p.x * Val.NextX - 5);
-        selecting.setY(Val.InitY + p.y * Val.NextY - 8);
+        selecting.setX(Val.InitX + p.x * Val.NextX - 2);
+        selecting.setY(Val.InitY + p.y * Val.NextY - 2);
         this.selecting.setVisible(true);
 
         // MediaPlayer need to be created after it played

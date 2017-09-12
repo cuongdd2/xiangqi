@@ -24,7 +24,7 @@ public class Soldier extends Piece {
             if (black && dy != 1) return false;
             if (!black && dy != -1) return false;
         } else {
-            if (dx > 1) return false;
+            if (dx != 0) return false;
         }
 
         return dx + Math.abs(dy) == 1;
