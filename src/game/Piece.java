@@ -7,7 +7,7 @@ import javafx.scene.input.MouseEvent;
 public class Piece extends ImageView {
     protected boolean black;
     private boolean selected;
-    private P pos;
+    protected P pos;
 
 
 //    public game.Piece(game.P pos) {
@@ -25,8 +25,10 @@ public class Piece extends ImageView {
         }
     }
 
-    public void draw() {
-    }
     public void move(int x, int y) {}
+    public boolean sameSide(Piece p) {
+        if (p == null) return false;
+        return black == p.black;
+    }
 
 }

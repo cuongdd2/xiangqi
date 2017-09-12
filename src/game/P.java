@@ -1,20 +1,20 @@
 package game;
 
 public class P {
-    private int _x;
-    private int _y;
+    public final int x;
+    public final int y;
 
     public P(int x, int y) {
-        this._x = x;
-        this._y = y;
+        this.x = x;
+        this.y = y;
     }
 
-    public int x() {
-        return _x;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if (!(o instanceof P)) return false;
+        P p = (P)o;
+        return x == p.x && y == p.y;
     }
-
-    public int y() {
-        return _y;
-    }
-
 }
