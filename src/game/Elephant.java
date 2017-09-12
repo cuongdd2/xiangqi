@@ -16,8 +16,7 @@ public class Elephant extends Piece {
         int dx = to.x - pos.x;
         int dy = to.y - pos.y;
         // check block by other piece
-        if (M[pos.y + dy/2][pos.x + dx/2] != null) return false;
-        return Math.abs(dx) == 2 && Math.abs(dy) == 2;
+        return M[pos.y + dy / 2][pos.x + dx / 2] == null && Math.abs(dx) == 2 && Math.abs(dy) == 2;
     }
 
 }

@@ -22,7 +22,7 @@ public class Canon extends Piece {
             for (int x = pos.x + step; x - to.x != 0; x += step) {
                 if (M[to.y][x] != null) bullet++;
             }
-        } else if (dx == 0) {
+        } else {
             step = dy / Math.abs(dy);
             for (int y = pos.y + step; y - to.y != 0; y += step) {
                 if (M[y][to.x] != null) bullet++;

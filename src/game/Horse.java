@@ -2,8 +2,6 @@ package game;
 
 import javafx.scene.image.Image;
 
-import java.util.List;
-
 public class Horse extends Piece {
     public Horse(boolean black) {
         this.black = black;

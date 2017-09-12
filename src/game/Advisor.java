@@ -49,16 +49,9 @@ public class Advisor extends Piece {
     public boolean canMove(Piece[][] M, P to) {
         int dx = to.x - pos.x;
         int dy = to.y - pos.y;
-        if (Math.abs(dx) ==1 &&  Math.abs(dy) == 1 && to.x <=5 && to.x >=3){
-            if (black  && to.y <= 2 && to.y >= 0){
-                return true;
-            }else if (!black && to.y >= 7 && to.y <= 9){
-                return true;
-            }else {
-                return false;
-            }
-        }else {
-            return false;
-        }
+        return Math.abs(dx) == 1 && Math.abs(dy) == 1
+                && to.x <= 5 && to.x >= 3
+                && (black && to.y <= 2 && to.y >= 0
+                || !black && to.y >= 7 && to.y <= 9);
     }
 }

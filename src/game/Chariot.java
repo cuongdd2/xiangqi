@@ -2,9 +2,6 @@ package game;
 
 import javafx.scene.image.Image;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Chariot extends Piece {
     public Chariot(boolean black) {
         this.black = black;

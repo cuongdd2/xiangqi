@@ -38,7 +38,6 @@ public class Board extends Group {
                     showSelected(point);
                 }
             } else {
-                EventTarget target = event.getTarget();
                 P p = getP(event);
                 hideSelecting();
                 if (model.canMove(p)) {

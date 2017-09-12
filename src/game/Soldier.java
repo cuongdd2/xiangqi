@@ -2,9 +2,6 @@ package game;
 
 import javafx.scene.image.Image;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Soldier extends Piece {
     public Soldier(boolean black) {
         this.black = black;
@@ -12,7 +9,7 @@ public class Soldier extends Piece {
         this.setImage(new Image(url));
     }
 
-    public boolean crossRiver() {
+    private boolean crossRiver() {
         return (black && pos.y > 4) || (!black && pos.y < 5);
     }
 
