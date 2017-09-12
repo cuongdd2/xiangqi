@@ -11,20 +11,10 @@ public class Piece extends ImageView {
     private boolean selected;
     protected P pos;
 
+    public Piece() {
+        setOnMouseClicked(event -> {
 
-//    public game.Piece(game.P pos) {
-//        this.pos = pos;
-//    }
-
-    class ClickHandler implements EventHandler<MouseEvent> {
-
-        @Override
-        public void handle(MouseEvent event) {
-            if (!selected) selected = true;
-            else {
-
-            }
-        }
+        });
     }
 
     public void toPixel(int x, int y) {
