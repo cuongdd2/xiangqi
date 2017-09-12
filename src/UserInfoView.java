@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class UserInfoView extends Application {
@@ -20,27 +21,32 @@ public class UserInfoView extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+
+        //get palyer Info
         Player player = new Player(Util.GAME_TIME,new PlayProfile(1,"test1",0.23,500));
 
         ////////
         primaryStage.setTitle("Select");
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
-        grid.setHgap(5);
-        grid.setVgap(5);
-        grid.setPadding(new Insets(10, 10, 10, 10));
+        grid.setHgap(1);
+        grid.setVgap(1);
+        grid.setPadding(new Insets(1, 1, 1, 1));
 
-        Label idLabel = new Label("id:"+player.playProfile.getId());
-        grid.add(idLabel, 1, 0);
+//        Label idLabel = new Label("id:"+player.playProfile.getId());
+//        grid.add(idLabel, 1, 0);
 
         Label nameLabel = new Label("name:"+player.playProfile.getName());
-        grid.add(nameLabel, 1, 1);
+        nameLabel.setTextFill(Color.web("000"));
+        grid.add(nameLabel, 0, 3);
 
-        Label winRateLabel = new Label("winRate:"+player.playProfile.getWinRate() + "%");
-        grid.add(winRateLabel, 0, 2);
+        Label winRateLabel = new Label("win:"+player.playProfile.getWinRate() + "%");
+        winRateLabel.setTextFill(Color.web("#0076FF"));
+        grid.add(winRateLabel, 0, 4);
 
         Label eloResultLabel = new Label("ELO:"+player.playProfile.getEloResult());
-        grid.add(eloResultLabel, 0, 3);
+        eloResultLabel.setTextFill(Color.web("#FF0000"));
+        grid.add(eloResultLabel, 0, 5);
 
         Image avatar = new Image("avatar.png");
         ImageView iv2 = new ImageView();
@@ -51,9 +57,7 @@ public class UserInfoView extends Application {
         iv2.setCache(true);
         grid.add(iv2, 0, 0);
 
-
-
-        Scene scene = new Scene(grid, 150, 150);
+        Scene scene = new Scene(grid, 60, 120);
         primaryStage.setScene(scene);
 
         primaryStage.show();
