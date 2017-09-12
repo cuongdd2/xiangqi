@@ -55,6 +55,9 @@ public class BoardModel {
 
 
     public boolean canMove(P p) {
+        // validate the destination point
+        if (p.x < 0 || p.x > Val.MaxX || p.y < 0 || p.y > Val.MaxY) return false;
+        // the move rule is depend on each chess piece, so we pass the implementation to subclass of Piece
         return current.canMove(M, p) && !current.sameSide(M[p.y][p.x]);
     }
 
