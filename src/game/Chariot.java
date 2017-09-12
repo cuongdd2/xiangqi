@@ -12,16 +12,42 @@ public class Chariot extends Piece {
         this.setImage(new Image(url));
     }
 
-    public List<P> getMovable(){
-        List<P> list = new ArrayList<>();
-        for (int x = 0; x <= Val.MaxX;x++){
-            for (int y=0;y<Val.MaxY;y++){
-                list.add(new P(x,y));
+    @Override
+    public boolean canMove(Piece[][] M, P to) {
+        int minX= 0;
+        int minY = 0;
+        int maxX = 8;
+        int maxY = 9;
+        if (to.y == pos.y){
+            for (int x = pos.x + 1; x <= Val.MaxX;x++){
+                if (M[to.y][x] != null){
+                    maxX = x;
+                    break;
+                }
+            }
+            for (int x = pos.x -1; x >= 0; x--){
+                if (M[to.y][x] != null){
+                    minX = x;
+                    break;
+                }
+            }
+        }
+        if (to.x == pos.x){
+            for (int y= pos.y + 1; y <= Val.MaxY; y++){
+                if (M[y][to.x] != null){
+                    maxY = y;
+                    break;
+                }
+            }
+
+            for (int y= pos.y - 1; y >= 0; y--){
+                if (M[y][to.x] != null){
+                    minY = y;
+                    break;
+                }
             }
         }
 
-        return list;
+        return to.x >= minX && to.x <= maxX && to.y >= minY && to.y <= maxY;
     }
-
-
 }
