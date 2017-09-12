@@ -55,19 +55,7 @@ public class BoardModel {
 
 
     public boolean canMove(P p) {
-        if (current instanceof Soldier) {
-            List<P> ps = ((Soldier) current).getMovable();
-            if (!ps.contains(p)) return false;
-            return !current.sameSide(M[p.y][p.x]);
-        }else if (current instanceof Advisor){
-            List<P> ps = ((Advisor) current).getMovable();
-            if (!ps.contains(p)) return false;
-            return !current.sameSide(M[p.y][p.x]);
-        }
-
-
-
-        return false;
+        return current.canMove(M, p) && !current.sameSide(M[p.y][p.x]);
     }
 
     public Piece move(P to) {

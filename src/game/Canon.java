@@ -2,6 +2,8 @@ package game;
 
 import javafx.scene.image.Image;
 
+import java.util.List;
+
 public class Canon extends Piece {
     public Canon(boolean black) {
         this.black = black;
@@ -18,6 +20,4 @@ public class Canon extends Piece {
 
 
     }
-
-
 }

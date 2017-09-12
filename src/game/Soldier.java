@@ -13,21 +13,20 @@ public class Soldier extends Piece {
     }
 
     public boolean crossRiver() {
-        return (black && pos.y > 4) || pos.y < 5;
+        return (black && pos.y > 4) || (!black && pos.y < 5);
     }
 
-    public List<P> getMovable() {
-        List<P> list = new ArrayList<>();
-        if (black) {
-            if(pos.y < Val.MaxY) list.add(new P(pos.x, pos.y + 1));
-        } else {
-            if (pos.y > 0) list.add(new P(pos.x, pos.y - 1));
-        }
+    public boolean canMove(Piece[][] M, P to) {
+        int dx = Math.abs(to.x - pos.x);
+        int dy = to.y - pos.y;
         if (crossRiver()) {
-            if (pos.x > 0) list.add(new P(pos.x - 1, pos.y));
-            if (pos.x < Val.MaxX) list.add(new P(pos.x + 1, pos.y));
+            if (dx != 0) return false;
+            if (black && dy != 1) return false;
+            if (!black && dy != -1) return false;
+        } else {
+            if (dx > 1) return false;
         }
 
-        return list;
+        return dx + Math.abs(dy) == 1;
     }
 }
