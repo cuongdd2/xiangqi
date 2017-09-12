@@ -48,6 +48,6 @@ public class Chariot extends Piece {
             }
         }
 
-        return to.x >= minX && to.x <= maxX && to.y >= minY && to.y <= maxY;
+        return (to.x == pos.x || to.y == pos.y ) && to.x >= minX && to.x <= maxX && to.y >= minY && to.y <= maxY;
     }
 }
