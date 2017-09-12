@@ -11,11 +11,6 @@ public class Horse extends Piece {
         this.setImage(new Image(url));
     }
 
-    public List<P> getMovable(Piece[][] pieces, P to) {
-
-        return null;
-    }
-
     public boolean canMove(Piece[][] pieces, P to) {
         int dx = to.x - pos.x;
         int dy = to.y - pos.y;
