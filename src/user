@@ -1,7 +1,15 @@
-CREATE TABLE user if NO EXISTS {
-  id INT(5) NOT NULL DEFAULT 0 AUTO_INCREMENT,
-  name CHAR(10) NO NULL DEFAULT '',
-  winRate DOUBLE(4) NO NULL DEFAULT 0,
-  eleResult INT(8) NO NULL DEFAULT 0,
-  PRIMARY KEY id
-};
+create database xiangqi;
+
+CREATE TABLE user(
+  `id` INT(5) NOT NULL AUTO_INCREMENT,
+  `name` CHAR(10) NOT NULL DEFAULT '',
+  `password` CHAR(10) NOT NULL DEFAULT '',
+  `winRate` INT (4) NOT NULL DEFAULT 0,
+  `eleResult` INT(8) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`)
+);
+
+
+INSERT INTO user(name,password) VALUES
+('test1',12345),('test2',12345),('test3',12345),('test4',12345),('test5',12345),
+('test6',12345),('test7',12345),('test8',12345),('test9',12345),('test10',12345);

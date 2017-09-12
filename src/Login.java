@@ -45,15 +45,15 @@ public class Login extends Application {
         TextField userTextField = new TextField();
         grid.add(userTextField, 1, 1);
 
-//        Label pw = new Label("Password:");
-//        grid.add(pw, 0, 2);
-//
-//        PasswordField pwBox = new PasswordField();
-//        grid.add(pwBox, 1, 2);
+        Label pw = new Label("Password:");
+        grid.add(pw, 0, 2);
 
-        Button btn = new Button("Sign in");
+        PasswordField pwBox = new PasswordField();
+        grid.add(pwBox, 1, 2);
+
+        Button btn = new Button("Login");
         HBox hbBtn = new HBox(10);
-        hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
+        hbBtn.setAlignment(Pos.BOTTOM_CENTER);
         hbBtn.getChildren().add(btn);
         grid.add(hbBtn, 1, 4);
 
@@ -68,15 +68,18 @@ public class Login extends Application {
             public void handle(ActionEvent e) {
                 System.out.println(userTextField.getText());
                 String userName = userTextField.getText();
+                String password = pwBox.getText();
 
                 //test
                 try {
-                    if (this.login(userName).equals(null)){
+                    if (this.login(userName,password) == 1){
                         //login success
                         System.out.println("login success");
                     }else {
                         //create new user
-                        System.out.println("Create new User, username is: " + this.login(userName));
+//                        System.out.println("Create new User, username is: " + this.login(userName,password));
+                        System.out.println("Username or password wrong ");
+
                     }
 
                     //jump to the chess board
@@ -88,7 +91,7 @@ public class Login extends Application {
                 actiontarget.setText("Sign in button pressed");
             }
 
-            private String login(String userName) throws SQLException {
+            private int login(String userName, String password) throws SQLException {
 
                 Connection conn = null;
                 String url = "jdbc:sqlite:C:/sqlite/main.db";
@@ -98,7 +101,7 @@ public class Login extends Application {
                 Statement stmt = conn.createStatement();
                 ResultSet rs;
 
-                String sql = "select * from user where name = " + userName;
+                String sql = "select * from user where name = " + userName + " and password = " + password;
                 rs = stmt.executeQuery(sql);
 
                 if (rs.next()){
@@ -108,18 +111,21 @@ public class Login extends Application {
                     int eloResult = rs.getInt("eloResult");
                     PlayProfile playProfile = new PlayProfile(id, name, winRate, eloResult);
                     Player player = new Player(Util.GAME_TIME,playProfile);
-                    return null;  //old player
+                    return 1;  //old player
                 }else {
-                    String insertSql = "insert into user(name) values('default')";
-                    int id= stmt.executeUpdate(insertSql, Statement.RETURN_GENERATED_KEYS);
-
-                    String defaultName = "default" + id;
-                    String updateSql = "update  user name='" + defaultName + "' where id=" + id;
-
-                    PlayProfile playProfile = new PlayProfile(id, defaultName, 0, 100);
-                    Player player = new Player(Util.GAME_TIME,playProfile);
-                    return defaultName; //new player
+                    return 0;
                 }
+//                else {
+//                    String insertSql = "insert into user(name) values('default')";
+//                    int id= stmt.executeUpdate(insertSql, Statement.RETURN_GENERATED_KEYS);
+//
+//                    String defaultName = "default" + id;
+//                    String updateSql = "update  user name='" + defaultName + "' where id=" + id;
+//
+//                    PlayProfile playProfile = new PlayProfile(id, defaultName, 0, 100);
+//                    Player player = new Player(Util.GAME_TIME,playProfile);
+//                    return defaultName; //new player
+//                }
             }
         });
 
