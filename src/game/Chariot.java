@@ -23,6 +23,7 @@ public class Chariot extends Piece {
                 if (M[to.y][x] != null){
                     maxX = x;
                     break;
+
                 }
             }
             for (int x = pos.x -1; x >= 0; x--){
