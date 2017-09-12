@@ -6,6 +6,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -29,16 +31,25 @@ public class UserInfoView extends Application {
         grid.setPadding(new Insets(10, 10, 10, 10));
 
         Label idLabel = new Label("id:"+player.playProfile.getId());
-        grid.add(idLabel, 2, 0);
+        grid.add(idLabel, 1, 0);
 
         Label nameLabel = new Label("name:"+player.playProfile.getName());
-        grid.add(nameLabel, 2, 1);
+        grid.add(nameLabel, 1, 1);
 
         Label winRateLabel = new Label("winRate:"+player.playProfile.getWinRate() + "%");
-        grid.add(winRateLabel, 2, 2);
+        grid.add(winRateLabel, 0, 2);
 
         Label eloResultLabel = new Label("ELO:"+player.playProfile.getEloResult());
-        grid.add(eloResultLabel, 2, 3);
+        grid.add(eloResultLabel, 0, 3);
+
+        Image avatar = new Image("avatar.png");
+        ImageView iv2 = new ImageView();
+        iv2.setImage(avatar);
+        iv2.setFitWidth(50);
+        iv2.setPreserveRatio(true);
+        iv2.setSmooth(true);
+        iv2.setCache(true);
+        grid.add(iv2, 0, 0);
 
 
 

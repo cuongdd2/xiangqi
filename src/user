@@ -5,9 +5,11 @@ CREATE TABLE user(
   `name` CHAR(10) NOT NULL DEFAULT '',
   `password` CHAR(10) NOT NULL DEFAULT '',
   `winRate` INT (4) NOT NULL DEFAULT 0,
-  `eleResult` INT(8) NOT NULL DEFAULT 0,
+  `eloResult` INT(8) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 );
+
+# ALTER TABLE `user` CHANGE COLUMN `eleResult` `eloResult` INT(8) NOT NULL DEFAULT 0;
 
 
 INSERT INTO user(name,password) VALUES

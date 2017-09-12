@@ -70,38 +70,46 @@ public class Login extends Application {
                 String userName = userTextField.getText();
                 String password = pwBox.getText();
 
-                //test
-                try {
-                    if (this.login(userName,password) == 1){
-                        //login success
-                        System.out.println("login success");
-                    }else {
-                        //create new user
+                if (!userName.equals("") && !password.equals("")){
+                    //test
+                    try {
+                        if (this.login(userName,password) == 1){
+                            //login success
+                            System.out.println("login success");
+                        }else {
+                            //create new user
 //                        System.out.println("Create new User, username is: " + this.login(userName,password));
-                        System.out.println("Username or password wrong ");
+                            System.out.println("Username or password wrong ");
 
+                        }
+
+                        //jump to the chess board
+
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
                     }
-
-                    //jump to the chess board
-
-                } catch (SQLException e1) {
-                    e1.printStackTrace();
                 }
 
-                actiontarget.setText("Sign in button pressed");
+
+                actiontarget.setText("Login button pressed");
             }
 
-            private int login(String userName, String password) throws SQLException {
+            private int login(String userName, String password) throws Exception {
 
                 Connection conn = null;
-                String url = "jdbc:sqlite:C:/sqlite/main.db";
+                Class.forName("com.mysql.jdbc.Driver");
+                // Setup the connection with the DB
+
+                String url = "jdbc:mysql://localhost:3306/xiangqi";
                 // create a connection to the database
-                conn = DriverManager.getConnection(url);
+                conn = DriverManager.getConnection(url,"root","");
 
                 Statement stmt = conn.createStatement();
                 ResultSet rs;
 
-                String sql = "select * from user where name = " + userName + " and password = " + password;
+                String sql = "select * from user where name = '" + userName + "' and password = '" + password+"'";
                 rs = stmt.executeQuery(sql);
 
                 if (rs.next()){
