@@ -59,7 +59,13 @@ public class BoardModel {
             List<P> ps = ((Soldier) current).getMovable();
             if (!ps.contains(p)) return false;
             return !current.sameSide(M[p.y][p.x]);
+        }else if (current instanceof Advisor){
+            List<P> ps = ((Advisor) current).getMovable();
+            if (!ps.contains(p)) return false;
+            return !current.sameSide(M[p.y][p.x]);
         }
+
+
 
         return false;
     }
