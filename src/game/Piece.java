@@ -27,7 +27,11 @@ public class Piece extends ImageView {
         }
     }
 
-    public void move(int x, int y) {}
+    public void toPixel(int x, int y) {
+        this.setX(x);
+        this.setY(y);
+    }
+
     public boolean sameSide(Piece p) {
         if (p == null) return false;
         return black == p.black;

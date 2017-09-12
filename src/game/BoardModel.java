@@ -1,7 +1,5 @@
 package game;
 
-import java.util.List;
-
 public class BoardModel {
 
     public Piece[][] M = new Piece[10][9];
@@ -55,6 +53,7 @@ public class BoardModel {
 
 
     public boolean canMove(P p) {
+        if (current.pos.equals(p)) return false;
         // validate the destination point
         if (p.x < 0 || p.x > Val.MaxX || p.y < 0 || p.y > Val.MaxY) return false;
         // the move rule is depend on each chess piece, so we pass the implementation to subclass of Piece
@@ -62,12 +61,13 @@ public class BoardModel {
     }
 
     public Piece move(P to) {
+        System.out.println("from:   " + current.pos.toString());
+        System.out.println("to:     " + to.toString());
         Piece beRemoved = M[to.y][to.x];
         P from = current.pos;
         M[to.y][to.x] = current;
         M[from.y][from.x] = null;
-        current.setX(Val.InitX + to.x * Val.NextX);
-        current.setY(Val.InitY + to.y * Val.NextY);
+        current.toPixel(Val.InitX + to.x * Val.NextX, Val.InitY + to.y * Val.NextY);
         current = null;
 
         return beRemoved;

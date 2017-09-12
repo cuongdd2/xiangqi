@@ -54,8 +54,8 @@ public class Board extends Group {
     }
 
     private P getP(MouseEvent event) {
-        int x = (int)Math.round((event.getX() - Val.InitX)/Val.NextX);
-        int y = (int)Math.round((event.getY() - Val.InitY)/Val.NextY);
+        int x = (int)Math.round((event.getX() - Val.InitX - Val.ChessW/2)/Val.NextX);
+        int y = (int)Math.round((event.getY() - Val.InitY - Val.ChessW/2)/Val.NextY);
         return new P(x, y);
     }
 
