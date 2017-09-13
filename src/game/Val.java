@@ -10,4 +10,6 @@ public class Val {
     public static final int InitY = 20;
     public static final int NextX = 71;
     public static final int NextY = 73;
+
+    public static final int GAME_TIME = 30*3600;  //second
 }

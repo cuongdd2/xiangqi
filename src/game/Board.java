@@ -13,16 +13,19 @@ import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.io.IOException;
 
 public class Board extends Group {
 
     private BoardModel model = new BoardModel();
+    private PlayerModel playerModel;
     private ImageView selecting = new ImageView(new Image("s70.png"));
     private RotateTransition rt;
     private String musicFile = "assets/sound/select.wav";
     private Media sound = new Media(new File(musicFile).toURI().toString());
+    private ChessSocket socket = new ChessSocket();
 
-    public Board() {
+    public Board() throws IOException {
         this.getChildren().add(new ImageView(new Image("bg640.jpg")));
         this.draw();
         initCircle();
@@ -32,16 +35,20 @@ public class Board extends Group {
             if (model.current == null) {
                 EventTarget target = event.getTarget();
                 if (target instanceof Piece) {
-                    P point = getP(event);
-                    model.current = (Piece)event.getTarget();
-                    model.current.pos = point;
-                    showSelected(point);
+                    Piece chess = (Piece)target;
+                    if (chess.black == playerModel.black) {
+                        model.current = (Piece)event.getTarget();
+                        P point = getP(event);
+                        model.current.pos = point;
+                        showSelected(point);
+                    }
                 }
             } else {
                 P p = getP(event);
                 hideSelecting();
                 if (model.canMove(p)) {
                     // move the chess
+                    socket.out.println("m:" + playerModel.getId() + ":" + model.current.pos + ":" + p);
                     Piece chess = model.move(p);
                     // remove captured chess
                     if (chess != null) getChildren().remove(chess);

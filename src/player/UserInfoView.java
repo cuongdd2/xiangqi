@@ -1,15 +1,14 @@
+package player;
+
+import game.Val;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -23,7 +22,7 @@ public class UserInfoView extends Application {
     public void start(Stage primaryStage) {
 
         //get palyer Info
-        Player player = new Player(Util.GAME_TIME,new PlayProfile(1,"test1",0.23,500));
+        Player player = new Player(Val.GAME_TIME,new PlayerProfile(1,"test1",0.23,500));
 
         ////////
         primaryStage.setTitle("Select");

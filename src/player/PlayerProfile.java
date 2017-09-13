@@ -1,10 +1,12 @@
-public class PlayProfile {
+package player;
+
+public class PlayerProfile {
     private int id;
     private String name;
     private double winRate;
     private int eloResult;
 
-    public PlayProfile(int id, String name, double winRate, int eloResult) {
+    public PlayerProfile(int id, String name, double winRate, int eloResult) {
         this.id = id;
         this.name = name;
         this.winRate = winRate;

@@ -1,8 +1,10 @@
+package player;
+
 public class Player {
     public int remainderTime;  //second
-    PlayProfile playProfile;
+    PlayerProfile playProfile;
 
-    public Player(int remainderTime, PlayProfile playProfile) {
+    public Player(int remainderTime, PlayerProfile playProfile) {
         this.remainderTime = remainderTime;
         this.playProfile = playProfile;
     }
@@ -15,11 +17,11 @@ public class Player {
         this.remainderTime = remainderTime;
     }
 
-    public PlayProfile getPlayProfile() {
+    public PlayerProfile getPlayProfile() {
         return playProfile;
     }
 
-    public void setPlayProfile(PlayProfile playProfile) {
+    public void setPlayProfile(PlayerProfile playProfile) {
         this.playProfile = playProfile;
     }
 

@@ -1,4 +1,6 @@
+package home;
 
+import game.Val;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,11 +13,10 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import player.PlayerProfile;
+import player.Player;
 
 import java.sql.*;
 
@@ -51,7 +52,7 @@ public class Login extends Application {
         PasswordField pwBox = new PasswordField();
         grid.add(pwBox, 1, 2);
 
-        Button btn = new Button("Login");
+        Button btn = new Button("home.Login");
         HBox hbBtn = new HBox(10);
         hbBtn.setAlignment(Pos.BOTTOM_CENTER);
         hbBtn.getChildren().add(btn);
@@ -74,11 +75,11 @@ public class Login extends Application {
                     //test
                     try {
                         if (this.login(userName,password) == 1){
-                            //login success
-                            System.out.println("login success");
+                            //home success
+                            System.out.println("home success");
                         }else {
                             //create new user
-//                        System.out.println("Create new User, username is: " + this.login(userName,password));
+//                        System.out.println("Create new User, username is: " + this.home(userName,password));
                             System.out.println("Username or password wrong ");
 
                         }
@@ -93,7 +94,7 @@ public class Login extends Application {
                 }
 
 
-                actiontarget.setText("Login button pressed");
+                actiontarget.setText("home.Login button pressed");
             }
 
             private int login(String userName, String password) throws Exception {
@@ -102,7 +103,7 @@ public class Login extends Application {
                 Class.forName("com.mysql.jdbc.Driver");
                 // Setup the connection with the DB
 
-                String url = "jdbc:mysql://localhost:3306/xiangqi";
+                String url = "jdbc:mysql://138.197.92.4:3306/xiangqi";
                 // create a connection to the database
                 conn = DriverManager.getConnection(url,"root","");
 
@@ -117,8 +118,8 @@ public class Login extends Application {
                     String name = rs.getString("name");
                     Double winRate = rs.getDouble("winRate");
                     int eloResult = rs.getInt("eloResult");
-                    PlayProfile playProfile = new PlayProfile(id, name, winRate, eloResult);
-                    Player player = new Player(Util.GAME_TIME,playProfile);
+                    PlayerProfile playProfile = new PlayerProfile(id, name, winRate, eloResult);
+                    Player player = new Player(Val.GAME_TIME,playProfile);
                     return 1;  //old player
                 }else {
                     return 0;
@@ -130,8 +131,8 @@ public class Login extends Application {
 //                    String defaultName = "default" + id;
 //                    String updateSql = "update  user name='" + defaultName + "' where id=" + id;
 //
-//                    PlayProfile playProfile = new PlayProfile(id, defaultName, 0, 100);
-//                    Player player = new Player(Util.GAME_TIME,playProfile);
+//                    player.PlayerProfile playProfile = new player.PlayerProfile(id, defaultName, 0, 100);
+//                    player.Player player = new player.Player(Util.GAME_TIME,playProfile);
 //                    return defaultName; //new player
 //                }
             }
@@ -141,7 +142,7 @@ public class Login extends Application {
         Scene scene = new Scene(grid, 300, 275);
         primaryStage.setScene(scene);
 
-//        scene.getStylesheets().add(getClass().getResource("Login.css").toExternalForm());
+//        scene.getStylesheets().add(getClass().getResource("home.Login.css").toExternalForm());
         primaryStage.show();
     }
 
