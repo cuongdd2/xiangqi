@@ -26,6 +26,10 @@ public class Board extends Group {
     private ChessSocket socket = new ChessSocket();
 
     public Board() throws IOException {
+        init();
+    }
+
+    public void init(){
         this.getChildren().add(new ImageView(new Image("bg640.jpg")));
         this.draw();
         initCircle();
