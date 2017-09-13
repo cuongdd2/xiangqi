@@ -32,21 +32,73 @@
 
 package home;
  
+import game.Val;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import player.Player;
+import player.PlayerProfile;
 
 import java.io.IOException;
+import java.sql.*;
+import java.util.Objects;
 
 public class LoginController {
     @FXML private Text actiontarget;
+    @FXML private TextField usernameTF;
+    @FXML private TextField passwordTF;
+    private Node source;
 
     @FXML protected void handleSubmitButtonAction(ActionEvent event) {
+        source = (Node)(event.getSource());
+        String userName = usernameTF.getText();
+        String password = passwordTF.getText();
+
+        if (Objects.equals(userName, "")) actiontarget.setText("Username must not empty!");
+        else if(Objects.equals(password, "")) actiontarget.setText("Password must not empty!");
+        else if (this.login(userName,password) == 1) openGameModeScreen();
+        else actiontarget.setText("Username or password wrong ");
+    }
+
+    private int login(String userName, String password) {
+
+        Connection conn = null;
+        int result = 0;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            String url = "jdbc:mysql://138.197.92.4:3306/xiangqi";
+            conn = DriverManager.getConnection(url, "root", "");
+
+            Statement stmt = conn.createStatement();
+            ResultSet rs;
+
+            String sql = "select * from user where name = '" + userName + "' and password = '" + password + "'";
+            rs = stmt.executeQuery(sql);
+
+            if (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                Double winRate = rs.getDouble("winRate");
+                int eloResult = rs.getInt("eloResult");
+                PlayerProfile playProfile = new PlayerProfile(id, name, winRate, eloResult);
+                Player player = new Player(Val.GAME_TIME, playProfile);
+                result = 1;  //old player
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    private void openGameModeScreen() {
         Parent root;
         try {
             root = FXMLLoader.load(getClass().getClassLoader().getResource("game_mode.fxml"));
@@ -54,7 +106,7 @@ public class LoginController {
             stage.setTitle("Game mode");
             stage.setScene(new Scene(root, 300, 275));
             stage.show();
-            ((Node)(event.getSource())).getScene().getWindow().hide();
+            source.getScene().getWindow().hide();
         }
         catch (IOException e) {
             e.printStackTrace();
