@@ -1,3 +1,5 @@
+package main;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -5,7 +7,6 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Server {
@@ -33,7 +34,7 @@ public class Server {
         ) {
             while (true) {
                 String msg = in.readLine();
-                System.out.println("Server <---- " + msg);
+                System.out.println("src.main.Server <---- " + msg);
                 if (msg != null) {
                     String[] arr = msg.split(":");
                     int id = Integer.parseInt(arr[1]);
