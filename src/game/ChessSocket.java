@@ -8,11 +8,16 @@ import java.net.Socket;
 
 public class ChessSocket {
     private static final String Host = "138.197.92.4";
-    Socket s = new Socket(Host, 14120);
-    PrintWriter out = new PrintWriter(s.getOutputStream(), true);
+    private Socket s = new Socket(Host, 14120);
+    private PrintWriter out = new PrintWriter(s.getOutputStream(), true);
     BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
 
     public ChessSocket() throws IOException {
 
+    }
+
+    public void sendMsg(String msg) {
+        System.out.println("Client ----> : " + msg);
+        out.println(msg);
     }
 }

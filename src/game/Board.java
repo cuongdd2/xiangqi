@@ -51,11 +51,11 @@ public class Board extends Group {
                 hideSelecting();
                 if (boardModel.canMove(p)) {
                     // move the chess
-                    socket.out.println("move:" + playerModel.getId() + ":" + boardModel.current.pos + ":" + p);
+                    socket.sendMsg("move:" + playerModel.getId() + ":" + boardModel.current.pos + ":" + p);
                 } else boardModel.current = null;
             }
         });
-        socket.out.println("join:" + playerModel.getId());
+        socket.sendMsg("join:" + playerModel.getId());
     }
 
     private void move(P p) {
