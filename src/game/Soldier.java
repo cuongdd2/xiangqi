@@ -3,8 +3,10 @@ package game;
 import javafx.scene.image.Image;
 
 public class Soldier extends Piece {
+
     public Soldier(boolean black) {
         this.black = black;
+        value = 7;
         String url = (black ? "black" : "red") + "/s.png";
         this.setImage(new Image(url));
     }
@@ -25,5 +27,9 @@ public class Soldier extends Piece {
         }
 
         return dx + Math.abs(dy) == 1;
+    }
+
+    public P[] getMoves() {
+        return null;
     }
 }

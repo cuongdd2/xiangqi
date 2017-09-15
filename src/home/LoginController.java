@@ -31,8 +31,8 @@
  */
 
 package home;
- 
-import game.Val;
+
+import game.PlayerModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -42,7 +42,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import player.Player;
 import player.PlayerProfile;
 
 import java.io.IOException;
@@ -54,6 +53,7 @@ public class LoginController {
     @FXML private TextField usernameTF;
     @FXML private TextField passwordTF;
     private Node source;
+    private Xiangqi game;
 
     @FXML protected void handleSubmitButtonAction(ActionEvent event) {
         source = (Node)(event.getSource());
@@ -62,55 +62,63 @@ public class LoginController {
 
         if (Objects.equals(userName, "")) actiontarget.setText("Username must not empty!");
         else if(Objects.equals(password, "")) actiontarget.setText("Password must not empty!");
-        else if (this.login(userName,password) == 1) openGameModeScreen();
+        else if (checkLogin(userName,password)) openGameModeScreen();
         else actiontarget.setText("Username or password wrong ");
     }
 
-    private int login(String userName, String password) {
-
-        Connection conn = null;
-        int result = 0;
+    private boolean checkLogin(String userName, String password) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            String url = "jdbc:mysql://138.197.92.4:3306/xiangqi";
-            conn = DriverManager.getConnection(url, "root", "");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        String url = "jdbc:mysql://138.197.92.4:3306/xiangqi";
+        String sql = "select * from user where name = '" + userName + "' and password = '" + password + "'";
 
-            Statement stmt = conn.createStatement();
-            ResultSet rs;
-
-            String sql = "select * from user where name = '" + userName + "' and password = '" + password + "'";
-            rs = stmt.executeQuery(sql);
-
+        try (
+                Connection conn = DriverManager.getConnection(url, "root", "");
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql);
+        ) {
             if (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
                 Double winRate = rs.getDouble("winRate");
                 int eloResult = rs.getInt("eloResult");
                 PlayerProfile playProfile = new PlayerProfile(id, name, winRate, eloResult);
-                Player player = new Player(Val.GAME_TIME, playProfile);
-                result = 1;  //old player
+                game.setPlayerModel(new PlayerModel(playProfile));
+                return true;
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         }
-        return result;
+        return false;
     }
 
     private void openGameModeScreen() {
         Parent root;
         try {
-            root = FXMLLoader.load(getClass().getClassLoader().getResource("game_mode.fxml"));
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getClassLoader().getResource("game_mode.fxml"));
+            root = loader.load();
+            source.getScene().getWindow().hide();
             Stage stage = new Stage();
             stage.setTitle("Game mode");
             stage.setScene(new Scene(root, 300, 275));
             stage.show();
-            source.getScene().getWindow().hide();
+            GameModeController controller = loader.getController();
+            controller.setPlayerModel(game.getPlayerModel());
         }
         catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public Xiangqi getGame() {
+        return game;
+    }
+
+    public void setGame(Xiangqi game) {
+        this.game = game;
+    }
 }

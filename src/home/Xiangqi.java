@@ -32,6 +32,7 @@
 
 package home;
 
+import game.PlayerModel;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -43,13 +44,27 @@ public class Xiangqi extends Application {
     public static void main(String[] args) {
         Application.launch(Xiangqi.class, args);
     }
+
+    private PlayerModel playerModel;
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("../login.fxml"));
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("../login.fxml"));
+        Parent root = loader.load();
         
         stage.setTitle("Login Screen");
         stage.setScene(new Scene(root, 300, 275));
+        LoginController controller = loader.getController();
+        controller.setGame(this);
         stage.show();
+    }
+
+    public PlayerModel getPlayerModel() {
+        return playerModel;
+    }
+
+    public void setPlayerModel(PlayerModel playerModel) {
+        this.playerModel = playerModel;
     }
 }

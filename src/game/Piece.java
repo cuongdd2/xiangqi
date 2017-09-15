@@ -5,6 +5,7 @@ import javafx.scene.image.ImageView;
 public class Piece extends ImageView {
     protected boolean black;
     protected P pos;
+    protected int value;
 
     public void toPixel(int x, int y) {
         this.setX(x);

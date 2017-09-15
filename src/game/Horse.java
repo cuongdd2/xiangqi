@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 public class Horse extends Piece {
     public Horse(boolean black) {
         this.black = black;
+        value = 30;
         String url = (black ? "black" : "red") + "/h.png";
         this.setImage(new Image(url));
     }
@@ -16,5 +17,9 @@ public class Horse extends Piece {
         dx = Math.abs(dx);
         dy = Math.abs(dy);
         return (dx == 2 && dy == 1) || (dx == 1 && dy == 2);
+    }
+
+    public P[] getMoves() {
+        return null;
     }
 }

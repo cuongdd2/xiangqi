@@ -4,19 +4,16 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import game.*?>
+<?import player.*?>
 
 <!--<GridPane fx:controller="home.GameModeController"-->
     <!--xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10" -->
     <!--styleClass="root">-->
   <!--<padding><Insets top="25" right="25" bottom="10" left="25" /></padding>-->
 
-  <VBox fx:controller="home.GameModeController" styleClass="root"
+  <VBox styleClass="root"
         xmlns:fx="http://javafx.com/fxml" alignment="center" spacing="20">
-      <Text fx:id="welcome"/>
-      <Button text="PvP" onAction="#handlePvP" />
-      <Button text="PvC" onAction="#handlePvC" />
-      <Button text="Logout" onAction="#handleLogout" />
-
   <stylesheets>
     <URL value="@game_mode.css" />
   </stylesheets>

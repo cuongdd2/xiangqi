@@ -4,6 +4,8 @@ public class BoardModel {
 
     public Piece[][] M = new Piece[10][9];
     public Piece current;
+    public int currentId = -1;
+    public boolean started = false;
 
     public BoardModel() {
         init();

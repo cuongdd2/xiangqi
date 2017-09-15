@@ -9,6 +9,13 @@ public class P {
         this.y = y;
     }
 
+    public static P parse(String s) {
+        String[] arr = s.split(",");
+        int x = Integer.parseInt(arr[0]);
+        int y = Integer.parseInt(arr[1]);
+        return new P(x, y);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

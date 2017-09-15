@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 public class General extends Piece {
     public General(boolean black) {
         this.black = black;
+        value = 9999;
         String url = (black ? "black" : "red") + "/g.png";
         this.setImage(new Image(url));
     }
@@ -12,6 +13,7 @@ public class General extends Piece {
     @Override
     public boolean canMove(Piece[][] M, P to) {
         if (to.x < 3 || to.x > 5) return false;
+        // TODO: make General can move vertical to kill enemy's General
         if (black && to.y > 2) return false;
         if (!black && to.y < 7) return false;
         int dx = Math.abs(to.x - pos.x);

@@ -1,6 +1,9 @@
 package game;
 
 public class Val {
+
+    public static int H = 743;
+    public static int W = 790;
     public static final int MaxY = 9;
     public static final int MaxX = 8;
 

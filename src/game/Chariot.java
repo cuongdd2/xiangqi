@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 public class Chariot extends Piece {
     public Chariot(boolean black) {
         this.black = black;
+        value = 60;
         String url = (black ? "black" : "red") + "/r.png";
         this.setImage(new Image(url));
     }
@@ -47,5 +48,10 @@ public class Chariot extends Piece {
         }
 
         return (to.x == pos.x || to.y == pos.y ) && to.x >= minX && to.x <= maxX && to.y >= minY && to.y <= maxY;
+    }
+
+    public P[] getMoves() {
+
+        return null;
     }
 }

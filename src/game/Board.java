@@ -14,10 +14,11 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class Board extends Group {
 
-    private BoardModel model = new BoardModel();
+    private BoardModel boardModel = new BoardModel();
     private PlayerModel playerModel;
     private ImageView selecting = new ImageView(new Image("s70.png"));
     private RotateTransition rt;
@@ -25,47 +26,85 @@ public class Board extends Group {
     private Media sound = new Media(new File(musicFile).toURI().toString());
     private ChessSocket socket = new ChessSocket();
 
-    public Board() throws IOException {
-        init();
-    }
-
-    public void init(){
+    public Board(PlayerModel pm) throws IOException {
+        receiveMsg();
+        this.playerModel = pm;
         this.getChildren().add(new ImageView(new Image("bg640.jpg")));
         this.draw();
         initCircle();
         selecting.setVisible(false);
         this.setLayoutX(150);
         this.setOnMouseClicked(event -> {
-            if (model.current == null) {
+            if (boardModel.current == null) {
                 EventTarget target = event.getTarget();
                 if (target instanceof Piece) {
                     Piece chess = (Piece)target;
                     if (chess.black == playerModel.black) {
-                        model.current = (Piece)event.getTarget();
+                        boardModel.current = (Piece)event.getTarget();
                         P point = getP(event);
-                        model.current.pos = point;
+                        boardModel.current.pos = point;
                         showSelected(point);
                     }
                 }
             } else {
                 P p = getP(event);
                 hideSelecting();
-                if (model.canMove(p)) {
+                if (boardModel.canMove(p)) {
                     // move the chess
-                    socket.out.println("m:" + playerModel.getId() + ":" + model.current.pos + ":" + p);
-                    Piece chess = model.move(p);
-                    // remove captured chess
-                    if (chess != null) getChildren().remove(chess);
-
-                } else model.current = null;
+                    socket.out.println("move:" + playerModel.getId() + ":" + boardModel.current.pos + ":" + p);
+                } else boardModel.current = null;
             }
         });
+        socket.out.println("join:" + playerModel.getId());
+    }
+
+    private void move(P p) {
+        Piece chess = boardModel.move(p);
+        // remove captured chess
+        if (chess != null) getChildren().remove(chess);
+    }
+
+    private void receiveMsg() {
+        new Thread("Port Listener") {
+            public void run() {
+                try {
+                    System.out.println("Listener Running . . .");
+                    while (true) {
+                        String msg = socket.in.readLine();
+                        System.out.println("Client <---- : "+ msg);
+                        if (msg != null) {
+                            String[] arr = msg.split(":");
+
+                            switch (arr[0]) {
+                                case "join":
+                                    playerModel.black = Objects.equals(arr[1], "1");
+                                    break;
+                                case "exit":
+                                    System.exit(0);
+                                    break;
+                                case "start":
+                                    boardModel.started = true;
+                                    boardModel.currentId = Integer.parseInt(arr[1]);
+                                default:
+                                    P from = P.parse(arr[0]);
+                                    boardModel.current = boardModel.M[from.y][from.x];
+                                    boardModel.current.pos = from;
+                                    move(P.parse(arr[1]));
+                            }
+                        }
+                        Thread.sleep(100);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            };
+        }.start();
     }
 
     private void draw() {
         for (int y = 0; y <= Val.MaxY; y++) {
             for (int x = 0; x <= Val.MaxX; x++) {
-                Piece n = model.M[y][x];
+                Piece n = boardModel.M[y][x];
                 if (n != null) {
                     n.setX(Val.InitX + x * Val.NextX);
                     n.setY(Val.InitY + y * Val.NextY);
