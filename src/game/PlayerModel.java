@@ -2,9 +2,12 @@ package game;
 
 import player.PlayerProfile;
 
+import javax.inject.Singleton;
+
+@Singleton
 public class PlayerModel {
     public boolean black;
-    private final PlayerProfile profile;
+    public PlayerProfile profile;
 
     public PlayerModel(PlayerProfile profile) {
         this.profile = profile;

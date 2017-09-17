@@ -44,6 +44,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import player.PlayerProfile;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.sql.*;
 import java.util.Objects;
@@ -54,6 +55,7 @@ public class LoginController {
     @FXML private TextField passwordTF;
     private Node source;
     private Xiangqi game;
+    @Inject PlayerModel playerModel;
 
     @FXML protected void handleSubmitButtonAction(ActionEvent event) {
         source = (Node)(event.getSource());
@@ -86,7 +88,7 @@ public class LoginController {
                 Double winRate = rs.getDouble("winRate");
                 int eloResult = rs.getInt("eloResult");
                 PlayerProfile playProfile = new PlayerProfile(id, name, winRate, eloResult);
-                game.setPlayerModel(new PlayerModel(playProfile));
+                playerModel.profile = playProfile;
                 return true;
             }
         } catch (SQLException e) {
@@ -106,19 +108,9 @@ public class LoginController {
             stage.setTitle("Game mode");
             stage.setScene(new Scene(root, 300, 275));
             stage.show();
-            GameModeController controller = loader.getController();
-            controller.setPlayerModel(game.getPlayerModel());
         }
         catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public Xiangqi getGame() {
-        return game;
-    }
-
-    public void setGame(Xiangqi game) {
-        this.game = game;
     }
 }

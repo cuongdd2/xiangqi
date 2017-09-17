@@ -1,6 +1,7 @@
 package home;
 
 import game.Board;
+import game.BoardModel;
 import game.PlayerModel;
 import game.Val;
 import javafx.event.ActionEvent;
@@ -12,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import javax.inject.Inject;
 import javax.swing.*;
 import java.io.IOException;
 
@@ -19,25 +21,28 @@ public class GameModeController {
 
     @FXML private Text welcome;
 
-    private PlayerModel playerModel;
+    @Inject PlayerModel playerModel;
+    @Inject
+    BoardModel boardModel;
 
     @FXML
     protected void handlePvP(ActionEvent event) {
-        newGame(event, true);
+        boardModel.isOnline = true;
+        newGame(event);
     }
-
 
     @FXML
     protected void handlePvC(ActionEvent event) {
-        newGame(event, false);
+        boardModel = new BoardModel();
+        boardModel.isOnline = false;
+        newGame(event);
     }
 
-    private void newGame(ActionEvent event, boolean pvp) {
+    private void newGame(ActionEvent event) {
         Group root = new Group();
         Stage stage = new Stage();
-        if (!pvp) playerModel.black = false; // if player with computer, you are red side, play first
         try {
-            root.getChildren().add(new Board(playerModel));
+            root.getChildren().add(new Board());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -52,9 +57,5 @@ public class GameModeController {
     @FXML
     protected void handleLogout(ActionEvent event) {
 
-    }
-
-    public void setPlayerModel(PlayerModel playerModel) {
-        this.playerModel = playerModel;
     }
 }

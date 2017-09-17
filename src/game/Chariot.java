@@ -2,6 +2,9 @@ package game;
 
 import javafx.scene.image.Image;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Chariot extends Piece {
     public Chariot(boolean black) {
         this.black = black;
@@ -16,42 +19,77 @@ public class Chariot extends Piece {
         int minY = 0;
         int maxX = 8;
         int maxY = 9;
-        if (to.y == pos.y){
-            for (int x = pos.x + 1; x <= Val.MaxX;x++){
-                if (M[to.y][x] != null){
-                    maxX = x;
+        if (to.y == y){
+            for (int newX = x + 1; newX <= Val.MaxX; newX++){
+                if (M[to.y][newX] != null){
+                    maxX = newX;
                     break;
 
                 }
             }
-            for (int x = pos.x -1; x >= 0; x--){
-                if (M[to.y][x] != null){
-                    minX = x;
+            for (int newX = x - 1; newX >= 0; newX--){
+                if (M[to.y][newX] != null){
+                    minX = newX;
                     break;
                 }
             }
         }
-        if (to.x == pos.x){
-            for (int y= pos.y + 1; y <= Val.MaxY; y++){
-                if (M[y][to.x] != null){
-                    maxY = y;
+        if (to.x == x){
+            for (int newY = y + 1; newY <= Val.MaxY; newY++){
+                if (M[newY][to.x] != null){
+                    maxY = newY;
                     break;
                 }
             }
 
-            for (int y= pos.y - 1; y >= 0; y--){
-                if (M[y][to.x] != null){
-                    minY = y;
+            for (int newY = y - 1; newY >= 0; newY--){
+                if (M[newY][to.x] != null){
+                    minY = newY;
                     break;
                 }
             }
         }
 
-        return (to.x == pos.x || to.y == pos.y ) && to.x >= minX && to.x <= maxX && to.y >= minY && to.y <= maxY;
+        return (to.x == x || to.y == y ) && to.x >= minX && to.x <= maxX && to.y >= minY && to.y <= maxY;
     }
 
-    public P[] getMoves() {
+    public List<P> getMoves(Piece[][] M) {
+        List<P> moves = new ArrayList<>();
+        Piece temp;
+        int newX, newY;
+        for (newX = x - 1; newX >= 0; newX--) {
+            temp = M[y][newX];
+            if (temp == null) moves.add(new P(newX, y));
+            else {
+                if (!sameSide(temp)) moves.add(new P(newX, y));
+                break;
+            }
+        }
+        for (newX = x + 1; newX <= Val.MaxX; newX++) {
+            temp = M[y][newX];
+            if (temp == null) moves.add(new P(newX, y));
+            else {
+                if (!sameSide(temp)) moves.add(new P(newX, y));
+                break;
+            }
+        }
+        for (newY = y - 1; newY >= 0; newY--) {
+            temp = M[newY][x];
+            if (temp == null) moves.add(new P(x, newY));
+            else {
+                if (!sameSide(temp)) moves.add(new P(x, newY));
+                break;
+            }
+        }
+        for (newY = y + 1; newY <= Val.MaxY; newY++) {
+            temp = M[newY][x];
+            if (temp == null) moves.add(new P(x, newY));
+            else {
+                if (!sameSide(temp)) moves.add(new P(x, newY));
+                break;
+            }
+        }
 
-        return null;
+        return moves;
     }
 }

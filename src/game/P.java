@@ -25,6 +25,10 @@ public class P {
         return x == p.x && y == p.y;
     }
 
+    public boolean isValid() {
+        return x >= 0 && x <= Val.MaxX && y >= 0 && y <= Val.MaxY;
+    }
+
     @Override
     public String toString() {
         return x + "," + y;

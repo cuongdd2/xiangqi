@@ -32,39 +32,67 @@
 
 package home;
 
+import game.EchoClientHandler;
 import game.PlayerModel;
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.*;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import javax.inject.Inject;
+
 public class Xiangqi extends Application {
-    
-    public static void main(String[] args) {
+
+    private static final String HOST = "10.10.13.86";
+    private static final int PORT = 14120;
+
+    public static void main(String[] args) throws Exception {
+//        initSocket();
         Application.launch(Xiangqi.class, args);
+
     }
 
-    private PlayerModel playerModel;
-    
+    private static void initSocket() throws Exception {
+        EventLoopGroup group = new NioEventLoopGroup();
+        try {
+            Bootstrap b = new Bootstrap();
+            b.group(group)
+                    .channel(NioSocketChannel.class)
+                    .option(ChannelOption.TCP_NODELAY, true)
+                    .handler(new ChannelInitializer<SocketChannel>() {
+                        @Override
+                        public void initChannel(SocketChannel ch) throws Exception {
+                            ChannelPipeline p = ch.pipeline();
+                            //p.addLast(new LoggingHandler(LogLevel.INFO));
+                            p.addLast(new EchoClientHandler());
+                        }
+                    });
+
+            // Start the client.
+            ChannelFuture f = b.connect(HOST, PORT).sync();
+
+            // Wait until the connection is closed.
+            f.channel().closeFuture().sync();
+        } finally {
+            // Shut down the event loop to terminate all threads.
+            group.shutdownGracefully();
+        }
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("../login.fxml"));
+        loader.setLocation(getClass().getResource("../game_mode.fxml"));
         Parent root = loader.load();
         
-        stage.setTitle("Login Screen");
+        stage.setTitle("Game mode");
         stage.setScene(new Scene(root, 300, 275));
-        LoginController controller = loader.getController();
-        controller.setGame(this);
         stage.show();
-    }
-
-    public PlayerModel getPlayerModel() {
-        return playerModel;
-    }
-
-    public void setPlayerModel(PlayerModel playerModel) {
-        this.playerModel = playerModel;
     }
 }

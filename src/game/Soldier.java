@@ -2,6 +2,9 @@ package game;
 
 import javafx.scene.image.Image;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Soldier extends Piece {
 
     public Soldier(boolean black) {
@@ -12,24 +15,33 @@ public class Soldier extends Piece {
     }
 
     private boolean crossRiver() {
-        return (black && pos.y > 4) || (!black && pos.y < 5);
+        return (black && y > 4) || (!black && y < 5);
     }
-
     public boolean canMove(Piece[][] M, P to) {
-        int dx = Math.abs(to.x - pos.x);
-        int dy = to.y - pos.y;
+        int dx = Math.abs(to.x - x);
+        int dy = to.y - y;
         if (crossRiver()) {
-            if (dx != 0) return false;
-            if (black && dy != 1) return false;
-            if (!black && dy != -1) return false;
+            if (dx > 1) return false;
         } else {
             if (dx != 0) return false;
         }
-
-        return dx + Math.abs(dy) == 1;
+        if (dx == 0) {
+            if (black) return dy == 1;
+            else return dy == -1;
+        } else return dy == 0;
     }
 
-    public P[] getMoves() {
-        return null;
+    public List<P> getMoves(Piece[][] M) {
+        List<P> moves = new ArrayList<>();
+        if (black) {
+            if (y < Val.MaxY && !sameSide(M[y + 1][x])) moves.add(new P(x, y + 1));
+        } else {
+            if (y > 0 && !sameSide(M[y - 1][x])) moves.add(new P(x, y - 1));
+        }
+        if (crossRiver()) {
+            if (x < Val.MaxX && !sameSide(M[y][x + 1])) moves.add(new P(x + 1, y));
+            if (x > 0 && !sameSide(M[y][x - 1])) moves.add(new P(x - 1, y));
+        }
+        return moves;
     }
 }
