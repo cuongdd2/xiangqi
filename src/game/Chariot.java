@@ -8,7 +8,7 @@ import java.util.List;
 public class Chariot extends Piece {
     public Chariot(boolean black) {
         this.black = black;
-        value = 60;
+        value = 100;
         String url = (black ? "black" : "red") + "/r.png";
         this.setImage(new Image(url));
     }

@@ -63,7 +63,8 @@ public class Board extends Group {
                     else {
                         move(p);
                         // generate move for black side
-                        Move m = boardModel.randomMove();
+//                        Move m = boardModel.randomMove();
+                        Move m = boardModel.bestMove();
                         if (m != null) {
                             boardModel.setCurrent(m.from);
                             move(m.to);
@@ -151,8 +152,6 @@ public class Board extends Group {
         selecting.setX(Val.InitX + p.x * Val.NextX - 2);
         selecting.setY(Val.InitY + p.y * Val.NextY - 2);
         this.selecting.setVisible(true);
-
-        // MediaPlayer need to be created after it played
         playSound(clickSound);
     }
     private void hideSelecting() {

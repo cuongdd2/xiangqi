@@ -9,7 +9,7 @@ import java.util.List;
 public class Advisor extends Piece {
     public Advisor(boolean black) {
         this.black = black;
-        value = 11;
+        value = 18;
         String url = (black ? "black" : "red") + "/a.png";
         this.setImage(new Image(url));
     }

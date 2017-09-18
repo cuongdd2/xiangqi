@@ -9,7 +9,7 @@ public class Soldier extends Piece {
 
     public Soldier(boolean black) {
         this.black = black;
-        value = 7;
+        value = 10;
         String url = (black ? "black" : "red") + "/s.png";
         this.setImage(new Image(url));
     }

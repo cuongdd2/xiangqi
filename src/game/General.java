@@ -9,7 +9,7 @@ import java.util.List;
 public class General extends Piece {
     public General(boolean black) {
         this.black = black;
-        value = 9999;
+        value = 999;
         String url = (black ? "black" : "red") + "/g.png";
         this.setImage(new Image(url));
     }

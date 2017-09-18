@@ -8,7 +8,7 @@ import java.util.List;
 public class Canon extends Piece {
     public Canon(boolean black) {
         this.black = black;
-        value = 32;
+        value = 60;
         String url = (black ? "black" : "red") + "/c.png";
         this.setImage(new Image(url));
     }
@@ -43,8 +43,10 @@ public class Canon extends Piece {
         for (newX = x - 1; newX >= 0; newX--) {
             temp = M[y][newX];
             if (hasBullet) {
-                if (!sameSide(temp)) moves.add(new P(newX, y));
-                break;
+                if (temp != null) {
+                    if (!sameSide(temp)) moves.add(new P(newX, y));
+                    else break;
+                }
             } else {
                 if (temp == null) moves.add(new P(newX, y));
                 else hasBullet = true;
@@ -54,8 +56,10 @@ public class Canon extends Piece {
         for (newX = x + 1; newX <= Val.MaxX; newX++) {
             temp = M[y][newX];
             if (hasBullet) {
-                if (!sameSide(temp)) moves.add(new P(newX, y));
-                break;
+                if (temp != null) {
+                    if (!sameSide(temp)) moves.add(new P(newX, y));
+                    else break;
+                }
             } else {
                 if (temp == null) moves.add(new P(newX, y));
                 else hasBullet = true;
@@ -65,8 +69,10 @@ public class Canon extends Piece {
         for (newY = y - 1; newY >= 0; newY--) {
             temp = M[newY][x];
             if (hasBullet) {
-                if (!sameSide(temp)) moves.add(new P(x, newY));
-                break;
+                if (temp != null) {
+                    if (!sameSide(temp)) moves.add(new P(x, newY));
+                    else break;
+                }
             } else {
                 if (temp == null) moves.add(new P(x, newY));
                 else hasBullet = true;
@@ -76,8 +82,10 @@ public class Canon extends Piece {
         for (newY = y + 1; newY <= Val.MaxY; newY++) {
             temp = M[newY][x];
             if (hasBullet) {
-                if (!sameSide(temp)) moves.add(new P(x, newY));
-                break;
+                if (temp != null) {
+                    if (!sameSide(temp)) moves.add(new P(x, newY));
+                    else break;
+                }
             } else {
                 if (temp == null) moves.add(new P(x, newY));
                 else hasBullet = true;

@@ -4,11 +4,13 @@ import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Stack;
 
 @Singleton
 public class BoardModel {
-
+    private static final int DEPTH = 4;
     public Piece[][] M = new Piece[10][9];
+    private Stack<Move> history = new Stack<>();
     private List<P> blacks = new ArrayList<>();
     private List<P> reds = new ArrayList<>();
     public Piece current;
@@ -16,6 +18,7 @@ public class BoardModel {
     public boolean started = false;
     public boolean isBlack = false;
     public boolean isOnline;
+    private boolean blackTurn = false;
 
     public BoardModel() {
         init();
@@ -99,6 +102,7 @@ public class BoardModel {
             else reds.remove(to);
         }
         P from = current.getPosition();
+        blackTurn = !blackTurn;
         if (current.black) {
             blacks.remove(from);
             blacks.add(to);
@@ -116,7 +120,8 @@ public class BoardModel {
 
     public List<Move> allMoves() {
         List<Move> moves = new ArrayList<>();
-        for (P p : blacks) {
+        List<P> pList = blackTurn ? blacks : reds;
+        for (P p : pList) {
             Piece piece = M[p.y][p.x];
             piece.setPosition(p);
             List<P> m = piece.getMoves(M);
@@ -134,4 +139,100 @@ public class BoardModel {
             return moves.get(rnd);
         } else return null;
     }
+
+    public Move bestMove() {
+        List<Move> moves = allMoves();
+        int bestValue = -9999;
+        Move bMove = null;
+        for (Move m : moves) {
+            move(m);
+            // Use MiniMax technique with Alpha Beta pruning
+            int v = -miniMaxAB(DEPTH, this, -10000, 10000, true);
+            undo();
+            if (v > bestValue) {
+                bestValue = v;
+                bMove = m;
+            }
+        }
+        return bMove;
+    }
+
+    /**
+     * board value calculation can improve by check chess piece location and attacking power
+     * */
+    private static int boardValue(BoardModel bm) {
+        int blackValue = 0;
+        int redValue = 0;
+        for (P p : bm.blacks) {
+            blackValue += bm.M[p.y][p.x].value;
+        }
+        for (P p : bm.reds) {
+            redValue += bm.M[p.y][p.x].value;
+        }
+        return redValue - blackValue;
+    }
+
+    private void move(Move m) {
+        m.captured = M[m.to.y][m.to.x];
+        history.push(m);
+        Piece p = M[m.from.y][m.from.x];
+        M[m.to.y][m.to.x] = p;
+        M[m.from.y][m.from.x] = null;
+        if (p.black) {
+            blacks.remove(m.from);
+            blacks.add(m.to);
+            if (m.captured != null) reds.remove(m.to);
+        } else {
+            reds.remove(m.from);
+            reds.add(m.to);
+            if (m.captured != null) blacks.remove(m.to);
+        }
+        blackTurn = !blackTurn;
+    }
+
+    private void undo() {
+        Move m = history.pop();
+        if (m == null) return;
+        // undo game move
+        Piece p = M[m.to.y][m.to.x];
+        M[m.from.y][m.from.x] = p;
+        M[m.to.y][m.to.x] = m.captured;
+        if (p.black) {
+            blacks.remove(m.to);
+            blacks.add(m.from);
+            if (m.captured != null) reds.add(m.to);
+        } else {
+            reds.remove(m.to);
+            reds.add(m.from);
+            if (m.captured != null) blacks.add(m.to);
+        }
+        blackTurn = !blackTurn;
+    }
+
+    private static int miniMaxAB(int depth, BoardModel bm, int alpha, int beta, boolean isMax) {
+        if (depth == 0) return -boardValue(bm);
+        List<Move> moves = bm.allMoves();
+        if (isMax) {
+            int bMove = -9999;
+            for (Move m : moves) {
+                bm.move(m);
+                bMove = Math.max(bMove, miniMaxAB(depth - 1, bm, alpha, beta, !isMax));
+                bm.undo();
+                alpha = Math.max(alpha, bMove);
+                if (beta <= alpha) return bMove;
+            }
+            return bMove;
+        } else {
+            int bMove = 9999;
+            for (Move m : moves) {
+                bm.move(m);
+                bMove = Math.min(bMove, miniMaxAB(depth - 1, bm, alpha, beta, !isMax));
+                bm.undo();
+                beta = Math.min(beta, bMove);
+                if (beta <= alpha) return bMove;
+            }
+            return bMove;
+        }
+    }
+
 }

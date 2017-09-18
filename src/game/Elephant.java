@@ -9,7 +9,7 @@ import java.util.List;
 public class Elephant extends Piece {
     public Elephant(boolean black) {
         this.black = black;
-        value = 11;
+        value = 20;
         String url = (black ? "black" : "red") + "/e.png";
         this.setImage(new Image(url));
     }
