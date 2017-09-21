@@ -1,7 +1,7 @@
 package home;
 
 import game.Board;
-import game.BoardModel;
+import ai.GameState;
 import game.PlayerModel;
 import game.Val;
 import javafx.event.ActionEvent;
@@ -14,7 +14,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import javax.inject.Inject;
-import javax.swing.*;
 import java.io.IOException;
 
 public class GameModeController {
@@ -23,18 +22,18 @@ public class GameModeController {
 
     @Inject PlayerModel playerModel;
     @Inject
-    BoardModel boardModel;
+    GameState gameState;
 
     @FXML
     protected void handlePvP(ActionEvent event) {
-        boardModel.isOnline = true;
+        gameState.isOnline = true;
         newGame(event);
     }
 
     @FXML
     protected void handlePvC(ActionEvent event) {
-        boardModel = new BoardModel();
-        boardModel.isOnline = false;
+        gameState = new GameState();
+        gameState.isOnline = false;
         newGame(event);
     }
 

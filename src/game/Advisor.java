@@ -6,49 +6,42 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Advisor extends Piece {
+public class Advisor extends Chess {
+    private static final int[][] POS_VALUES = {
+            { 0,  0,  0,  0,  0,  0,  0,  0,  0},
+            { 0,  0,  0,  0,  0,  0,  0,  0,  0},
+            { 0,  0,  0,  0,  0,  0,  0,  0,  0},
+            { 0,  0,  0,  0,  0,  0,  0,  0,  0},
+            { 0,  0,  0,  0,  0,  0,  0,  0,  0},
+            { 0,  0, 20,  0,  0,  0, 20,  0,  0},
+            { 0,  0,  0,  0,  0,  0,  0,  0,  0},
+            {18,  0,  0, 20, 23, 20,  0,  0, 18},
+            { 0,  0,  0,  0, 23,  0,  0,  0,  0},
+            { 0,  0, 20, 20,  0, 20, 20,  0,  0}
+    };
+//    private static final int VALUE = 110;
+    private static final int VALUE = 250;
+    public int mobility = 1;
+
+    public int posValue(P pos) {
+        if (black) pos = pos.mirror();
+        return POS_VALUES[pos.y][pos.x];
+    }
+
+    @Override
+    public int getMobility() {
+        return mobility;
+    }
+
     public Advisor(boolean black) {
-        this.black = black;
-        value = 18;
+        super(black);
+        value = VALUE;
         String url = (black ? "black" : "red") + "/a.png";
         this.setImage(new Image(url));
     }
 
-    public List<P> getMovable(){
-        List<P> list = new ArrayList<>();
-        if (black){
-            if ((x + 1) <= 5 && (y + 1) <= 2){
-                list.add(new P(x+1, y+1));
-            }
-            if ((x + 1) <= 5 && (y-1) >=0){
-                list.add(new P(x+1, y-1));
-            }
-            if ((x - 1) >= 3 && (y+1) <=2){
-                list.add(new P(x-1, y+1));
-            }
-            if ((x - 1) >= 3 && (y-1) >=0){
-                list.add(new P(x-1, y-1));
-            }
-        }else {
-            if ((x + 1) <= 5 && (y + 1) <= 9){
-                list.add(new P(x+1, y+1));
-            }
-            if ((x + 1) <= 5 && (y-1) >=7){
-                list.add(new P(x+1, y-1));
-            }
-            if ((x - 1) >= 3 && (y+1) <=9){
-                list.add(new P(x-1, y+1));
-            }
-            if ((x - 1) >= 3 && (y-1) >=7){
-                list.add(new P(x-1, y-1));
-            }
-        }
-
-        return list;
-    }
-
     @Override
-    public boolean canMove(Piece[][] M, P to) {
+    public boolean canMove(Chess[][] M, P to) {
         int dx = to.x - x;
         int dy = to.y - y;
         return Math.abs(dx) == 1 && Math.abs(dy) == 1
@@ -57,7 +50,7 @@ public class Advisor extends Piece {
                 || !black && to.y >= 7 && to.y <= 9);
     }
 
-    public List<P> getMoves(Piece[][] M) {
+    public List<P> getMoves(Chess[][] M) {
         List<P> moves = new ArrayList<>();
         List<P> newMoves = Arrays.asList(
                 new P(x + 1, y + 1), new P(x + 1, y - 1),

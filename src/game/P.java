@@ -29,6 +29,10 @@ public class P {
         return x >= 0 && x <= Val.MaxX && y >= 0 && y <= Val.MaxY;
     }
 
+    public P mirror() {
+        return new P(x, Val.MaxY - y);
+    }
+
     @Override
     public String toString() {
         return x + "," + y;

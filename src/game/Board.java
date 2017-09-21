@@ -1,5 +1,7 @@
 package game;
 
+import ai.GameState;
+import ai.Search;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
@@ -16,10 +18,12 @@ import javafx.util.Duration;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Board extends Group {
 
-    @Inject BoardModel boardModel;
+    GameState gameState = new GameState();
     @Inject PlayerModel playerModel;
     private ImageView selecting = new ImageView(new Image("s70.png"));
     private RotateTransition rt;
@@ -34,59 +38,81 @@ public class Board extends Group {
     private Media bgSound = new Media(new File("assets/sound/bg.mp3").toURI().toString());
     private Media timerSound = new Media(new File("assets/sound/timer.mp3").toURI().toString());
     private ChessSocket socket;
+    private boolean thinking = false;
 
     public Board() throws IOException {
-        boardModel = new BoardModel();
+        int core = Runtime.getRuntime().availableProcessors();
+        System.out.println("CPU : " + core);
+        gameState = new GameState();
         this.getChildren().add(new ImageView(new Image("bg640.jpg")));
         this.draw();
         initCircle();
         selecting.setVisible(false);
 //        this.setLayoutX(150);
         this.setOnMouseClicked(event -> {
-            if (boardModel.current == null) {
+            if (thinking) return;
+            if (gameState.current == null) {
                 EventTarget target = event.getTarget();
-                if (target instanceof Piece) {
-                    Piece chess = (Piece)target;
-                    if (chess.black == boardModel.isBlack) {
+                if (target instanceof Chess) {
+                    Chess chess = (Chess)target;
+                    if (chess.black == gameState.isBlack) {
                         P point = getP(event);
-                        boardModel.setCurrent(point);
+                        gameState.setCurrent(point);
                         showSelected(point);
+
                     }
                 }
             } else {
                 P p = getP(event);
                 hideSelecting();
-                if (boardModel.canMove(p)) {
+                if (gameState.canMove(p)) {
                     // move the chess
-                    if (boardModel.isOnline)
-                        socket.sendMsg("move:" + playerModel.getId() + ":" + boardModel.current.x + ":" + p);
+                    if (gameState.isOnline)
+                        socket.sendMsg("move:" + playerModel.getId() + ":" + gameState.current.x + ":" + p);
                     else {
                         move(p);
                         // generate move for black side
-//                        Move m = boardModel.randomMove();
-                        Move m = boardModel.bestMove();
-                        if (m != null) {
-                            boardModel.setCurrent(m.from);
-                            move(m.to);
-                        }
+                        execAI();
                     }
                 } else {
-                    boardModel.current = null;
+                    gameState.current = null;
                     playSound(illegalSound);
                 }
             }
         });
-        if (boardModel.isOnline) {
-            receiveMsg();
+        if (gameState.isOnline) {
             socket.sendMsg("join:" + playerModel.getId());
         }
         playSound(bgSound);
     }
 
+
+    final Move[] foundMove = new Move[1];
+    private void execAI() {
+        thinking = true;
+//        new Thread("AI") {
+//            public void run() {
+                long time = System.currentTimeMillis();
+//                Move m = Search.bestMove(gameState);
+                foundMove[0] = gameState.bestMove();
+                thinking = false;
+                moveByAI();
+//            };
+//
+//        }.start();
+
+    }
+
+    private void moveByAI() {
+        gameState.setCurrent(foundMove[0].from);
+        move(foundMove[0].to);
+    }
+
+
     private void move(P p) {
-        boolean isCanon = boardModel.current instanceof Canon;
-        boolean isHorse = boardModel.current instanceof Horse;
-        Piece chess = boardModel.move(p);
+        boolean isCanon = gameState.current instanceof Canon;
+        boolean isHorse = gameState.current instanceof Horse;
+        Chess chess = gameState.move(p);
         // remove captured chess
         if (chess != null) {
             if (isCanon) playSound(canonSound);
@@ -103,25 +129,10 @@ public class Board extends Group {
         } else playSound(moveSound);
     }
 
-    private void receiveMsg() {
-        new Thread("Port Listener") {
-            public void run() {
-                try {
-                    System.out.println("Listener Running . . .");
-                    while (true) {
-
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            };
-        }.start();
-    }
-
     private void draw() {
         for (int y = 0; y <= Val.MaxY; y++) {
             for (int x = 0; x <= Val.MaxX; x++) {
-                Piece n = boardModel.M[y][x];
+                Chess n = gameState.M[y][x];
                 if (n != null) {
                     n.setX(Val.InitX + x * Val.NextX);
                     n.setY(Val.InitY + y * Val.NextY);
@@ -153,9 +164,29 @@ public class Board extends Group {
         selecting.setY(Val.InitY + p.y * Val.NextY - 2);
         this.selecting.setVisible(true);
         playSound(clickSound);
+        showMoves(p);
+    }
+    private List<ImageView> dots = new ArrayList<>();
+    private void showMoves(P p) {
+        Chess chess = gameState.at(p);
+        List<P> moves = chess.getMoves(gameState.M);
+        for (P to : moves) {
+            ImageView img = new ImageView(new Image("dot.png"));
+            getChildren().add(img);
+            img.setX(Val.InitX + to.x * Val.NextX + 18);
+            img.setY(Val.InitY + to.y * Val.NextY + 16);
+            dots.add(img);
+        }
+    }
+    private void hideMoves() {
+        for (ImageView img : dots) {
+            getChildren().remove(img);
+        }
+        dots = new ArrayList<>();
     }
     private void hideSelecting() {
         selecting.setVisible(false);
+        hideMoves();
     }
 
     private void playSound(Media snd) {

@@ -15,8 +15,7 @@
  */
 package game;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
+import ai.GameState;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
@@ -30,7 +29,8 @@ import java.util.Objects;
  */
 public class EchoClientHandler extends ChannelInboundHandlerAdapter {
     @Inject PlayerModel playerModel;
-    @Inject BoardModel boardModel;
+    @Inject
+    GameState gameState;
 
     /**
      * Creates a client-side handler.
@@ -58,12 +58,12 @@ public class EchoClientHandler extends ChannelInboundHandlerAdapter {
                     System.exit(0);
                     break;
                 case "start":
-                    boardModel.started = true;
-                    boardModel.currentId = Integer.parseInt(arr[1]);
+                    gameState.started = true;
+                    gameState.currentId = Integer.parseInt(arr[1]);
                 default:
                     P from = P.parse(arr[0]);
-                    boardModel.current = boardModel.M[from.y][from.x];
-                    boardModel.current.setPosition(from);
+                    gameState.current = gameState.M[from.y][from.x];
+                    gameState.current.setPosition(from);
 //                    move(P.parse(arr[1]));
             }
         }

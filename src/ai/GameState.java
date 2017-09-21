@@ -1,4 +1,6 @@
-package game;
+package ai;
+
+import game.*;
 
 import javax.inject.Singleton;
 import java.util.ArrayList;
@@ -7,21 +9,27 @@ import java.util.List;
 import java.util.Stack;
 
 @Singleton
-public class BoardModel {
-    private static final int DEPTH = 4;
-    public Piece[][] M = new Piece[10][9];
+public class GameState {
+    private static final int DEPTH = 3;
+    public Chess[][] M = new Chess[10][9];
     private Stack<Move> history = new Stack<>();
-    private List<P> blacks = new ArrayList<>();
-    private List<P> reds = new ArrayList<>();
-    public Piece current;
+    public List<P> blacks = new ArrayList<>();
+    public List<P> reds = new ArrayList<>();
+    public Chess current;
     public int currentId = -1;
     public boolean started = false;
     public boolean isBlack = false;
     public boolean isOnline;
     private boolean blackTurn = false;
+    private PSV searchEngine = new PSV();
 
-    public BoardModel() {
+    public GameState() {
         init();
+        searchEngine.gameState = this;
+    }
+
+    public Move bestMove() {
+        return searchEngine.searchAGoodMove(M);
     }
 
     private void init() {
@@ -79,6 +87,10 @@ public class BoardModel {
                 new P(0, 6), new P(2, 6), new P(4, 6), new P(6, 6), new P(8, 6)));
     }
 
+    public Chess at(P p) {
+        return M[p.y][p.x];
+    }
+
     public void setCurrent(P p) {
         current = M[p.y][p.x];
         // make sure current != null
@@ -89,14 +101,13 @@ public class BoardModel {
         if (current.getPosition().equals(p)) return false;
         // validate the destination point
         if (p.x < 0 || p.x > Val.MaxX || p.y < 0 || p.y > Val.MaxY) return false;
-        // the move rule is depend on each chess piece, so we pass the implementation to subclass of Piece
+        // the move rule is depend on each chess piece, so we pass the implementation to subclass of Chess
         return current.canMove(M, p) && !current.sameSide(M[p.y][p.x]);
     }
 
-    public Piece move(P to) {
-        System.out.println("from:   " + current.getPosition().toString());
-        System.out.println("to:     " + to.toString());
-        Piece beRemoved = M[to.y][to.x];
+    public Chess move(P to) {
+        System.out.println(current.getPosition() + " --> " + to);
+        Chess beRemoved = M[to.y][to.x];
         if (beRemoved != null) {
             if (beRemoved.black) blacks.remove(to);
             else reds.remove(to);
@@ -118,64 +129,10 @@ public class BoardModel {
         return beRemoved;
     }
 
-    public List<Move> allMoves() {
-        List<Move> moves = new ArrayList<>();
-        List<P> pList = blackTurn ? blacks : reds;
-        for (P p : pList) {
-            Piece piece = M[p.y][p.x];
-            piece.setPosition(p);
-            List<P> m = piece.getMoves(M);
-            for (P to : m) {
-                moves.add(new Move(p, to));
-            }
-        }
-        return moves;
-    }
-
-    public Move randomMove() {
-        List<Move> moves = allMoves();
-        if (moves.size() > 0) {
-            int rnd = (int)(Math.random() * moves.size());
-            return moves.get(rnd);
-        } else return null;
-    }
-
-    public Move bestMove() {
-        List<Move> moves = allMoves();
-        int bestValue = -9999;
-        Move bMove = null;
-        for (Move m : moves) {
-            move(m);
-            // Use MiniMax technique with Alpha Beta pruning
-            int v = -miniMaxAB(DEPTH, this, -10000, 10000, true);
-            undo();
-            if (v > bestValue) {
-                bestValue = v;
-                bMove = m;
-            }
-        }
-        return bMove;
-    }
-
-    /**
-     * board value calculation can improve by check chess piece location and attacking power
-     * */
-    private static int boardValue(BoardModel bm) {
-        int blackValue = 0;
-        int redValue = 0;
-        for (P p : bm.blacks) {
-            blackValue += bm.M[p.y][p.x].value;
-        }
-        for (P p : bm.reds) {
-            redValue += bm.M[p.y][p.x].value;
-        }
-        return redValue - blackValue;
-    }
-
-    private void move(Move m) {
+    public void move(Move m) {
         m.captured = M[m.to.y][m.to.x];
         history.push(m);
-        Piece p = M[m.from.y][m.from.x];
+        Chess p = M[m.from.y][m.from.x];
         M[m.to.y][m.to.x] = p;
         M[m.from.y][m.from.x] = null;
         if (p.black) {
@@ -190,11 +147,28 @@ public class BoardModel {
         blackTurn = !blackTurn;
     }
 
-    private void undo() {
+    public boolean endGame() {
+        int count = 0;
+        for (P p : reds) {
+            if (at(p) instanceof General) {
+                count++;
+                break;
+            }
+        }
+        for (P p : blacks) {
+            if (at(p) instanceof General) {
+                count++;
+                break;
+            }
+        }
+        return count < 2;
+    }
+
+    public void undo() {
         Move m = history.pop();
         if (m == null) return;
         // undo game move
-        Piece p = M[m.to.y][m.to.x];
+        Chess p = M[m.to.y][m.to.x];
         M[m.from.y][m.from.x] = p;
         M[m.to.y][m.to.x] = m.captured;
         if (p.black) {
@@ -207,32 +181,6 @@ public class BoardModel {
             if (m.captured != null) blacks.add(m.to);
         }
         blackTurn = !blackTurn;
-    }
-
-    private static int miniMaxAB(int depth, BoardModel bm, int alpha, int beta, boolean isMax) {
-        if (depth == 0) return -boardValue(bm);
-        List<Move> moves = bm.allMoves();
-        if (isMax) {
-            int bMove = -9999;
-            for (Move m : moves) {
-                bm.move(m);
-                bMove = Math.max(bMove, miniMaxAB(depth - 1, bm, alpha, beta, !isMax));
-                bm.undo();
-                alpha = Math.max(alpha, bMove);
-                if (beta <= alpha) return bMove;
-            }
-            return bMove;
-        } else {
-            int bMove = 9999;
-            for (Move m : moves) {
-                bm.move(m);
-                bMove = Math.min(bMove, miniMaxAB(depth - 1, bm, alpha, beta, !isMax));
-                bm.undo();
-                beta = Math.min(beta, bMove);
-                if (beta <= alpha) return bMove;
-            }
-            return bMove;
-        }
     }
 
 }
