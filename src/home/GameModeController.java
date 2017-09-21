@@ -6,8 +6,10 @@ import game.PlayerModel;
 import game.Val;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -26,8 +28,22 @@ public class GameModeController {
 
     @FXML
     protected void handlePvP(ActionEvent event) {
+        gameState = new GameState();
         gameState.isOnline = true;
-        newGame(event);
+        Parent root;
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getClassLoader().getResource("login.fxml"));
+            root = loader.load();
+            ((Node)(event.getSource())).getScene().getWindow().hide();
+            Stage stage = new Stage();
+            stage.setTitle("Game mode");
+            stage.setScene(new Scene(root, 300, 275));
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML

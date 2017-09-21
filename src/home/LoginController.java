@@ -32,14 +32,18 @@
 
 package home;
 
+import game.Board;
 import game.PlayerModel;
+import game.Val;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import player.PlayerProfile;
@@ -64,7 +68,7 @@ public class LoginController {
 
         if (Objects.equals(userName, "")) actiontarget.setText("Username must not empty!");
         else if(Objects.equals(password, "")) actiontarget.setText("Password must not empty!");
-        else if (checkLogin(userName,password)) openGameModeScreen();
+        else if (checkLogin(userName,password)) newGame(event);
         else actiontarget.setText("Username or password wrong ");
     }
 
@@ -88,7 +92,7 @@ public class LoginController {
                 Double winRate = rs.getDouble("winRate");
                 int eloResult = rs.getInt("eloResult");
                 PlayerProfile playProfile = new PlayerProfile(id, name, winRate, eloResult);
-                playerModel.profile = playProfile;
+                playerModel = new PlayerModel(playProfile);
                 return true;
             }
         } catch (SQLException e) {
@@ -97,20 +101,19 @@ public class LoginController {
         return false;
     }
 
-    private void openGameModeScreen() {
-        Parent root;
+
+    private void newGame(ActionEvent event) {
+        Group root = new Group();
+        Stage stage = new Stage();
         try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getClassLoader().getResource("game_mode.fxml"));
-            root = loader.load();
-            source.getScene().getWindow().hide();
-            Stage stage = new Stage();
-            stage.setTitle("Game mode");
-            stage.setScene(new Scene(root, 300, 275));
-            stage.show();
-        }
-        catch (IOException e) {
+            root.getChildren().add(new Board());
+        } catch (IOException e) {
             e.printStackTrace();
         }
+        Scene scene = new Scene(root, Val.W, Val.H, Color.GRAY);
+        stage.setTitle("Xiangqi");
+        stage.setScene(scene);
+        stage.show();
+        ((Node)(event.getSource())).getScene().getWindow().hide();
     }
 }
