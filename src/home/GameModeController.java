@@ -37,7 +37,7 @@ public class GameModeController {
             root = loader.load();
             ((Node)(event.getSource())).getScene().getWindow().hide();
             Stage stage = new Stage();
-            stage.setTitle("Game mode");
+            stage.setTitle("Login");
             stage.setScene(new Scene(root, 300, 275));
             stage.show();
         }
@@ -71,6 +71,6 @@ public class GameModeController {
 
     @FXML
     protected void handleLogout(ActionEvent event) {
-
+        System.exit(1);
     }
 }

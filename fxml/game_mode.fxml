@@ -15,7 +15,7 @@
       <Text fx:id="welcome"/>
       <Button text="PvP" onAction="#handlePvP" />
       <Button text="PvC" onAction="#handlePvC" />
-      <Button text="Logout" onAction="#handleLogout" />
+      <Button text="Quit" onAction="#handleLogout" />
 
   <stylesheets>
     <URL value="@game_mode.css" />

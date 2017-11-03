@@ -21,7 +21,7 @@ public class GameState {
     public boolean isBlack = false;
     public boolean isOnline;
     private boolean blackTurn = false;
-    private PSV searchEngine = new PSV();
+    private PVS searchEngine = new PVS();
 
     public GameState() {
         init();

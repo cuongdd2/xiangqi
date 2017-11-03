@@ -9,13 +9,13 @@ import java.util.Arrays;
 /**
  * Principal variation search with History Heuristic and Transposition Table
  * */
-public class PSV {
+public class PVS {
     public GameState gameState;
     private Chess[][] currentMap = new Chess[10][9];
-    private int searchDepth = 6;
+    private int searchDepth = 5;
     private int maxDepth;
     private long timeCount;
-    private static int TIME_LIMIT = 3000;
+    private static int TIME_LIMIT = 2000;
     private MoveGenerator moveGen = new MoveGenerator();
     private EvaluationV2 evaluator = new EvaluationV2();
     private Move bestMove;
